@@ -459,31 +459,7 @@ port_exist_check() {
         sleep 1
     fi
 }
-acme() {
-    if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --standalone -k ec-256 --force --test; then
-        echo -e "${OK} ${GreenBG} SSL 证书测试签发成功，开始正式签发 ${Font}"
-        rm -rf "$HOME/.acme.sh/${domain}_ecc"
-        sleep 2
-    else
-        echo -e "${Error} ${RedBG} SSL 证书测试签发失败 ${Font}"
-        rm -rf "$HOME/.acme.sh/${domain}_ecc"
-        exit 1
-    fi
 
-    if "$HOME"/.acme.sh/acme.sh --issue -d "${domain}" --standalone -k ec-256 --force; then
-        echo -e "${OK} ${GreenBG} SSL 证书生成成功 ${Font}"
-        sleep 2
-        mkdir /data
-        if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /data/v2ray.crt --keypath /data/v2ray.key --ecc --force; then
-            echo -e "${OK} ${GreenBG} 证书配置成功 ${Font}"
-            sleep 2
-        fi
-    else
-        echo -e "${Error} ${RedBG} SSL 证书生成失败 ${Font}"
-        rm -rf "$HOME/.acme.sh/${domain}_ecc"
-        exit 1
-    fi
-}
 v2ray_conf_add_tls() {
     cd /etc/v2ray || exit
     wget --no-check-certificate https://raw.githubusercontent.com/wulabing/V2Ray_ws-tls_bash_onekey/${github_branch}/tls/config.json -O config.json
